@@ -99,7 +99,7 @@ figure
 plot(openLong-openShort)
 
 %Calcular P&L
-% PL = (openShort(w+1)- openShort(w))*S() .......
+PL = (openShort(w+1)- openShort(w))*S()
 
 
 
