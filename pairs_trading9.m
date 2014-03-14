@@ -10,7 +10,7 @@ Sfull = load('Pairs_HistPrices.csv') ;
 [N,z] = size(Sfull)
 
 %Parametros
-windowSize = 63 ;%numero de rendimientos
+windowSize = 59 ;%numero de rendimientos
 dt = 1/252 ;
 stdOpen = 2.0 ;
 stdClose = 1.0 ;
@@ -45,9 +45,9 @@ for w = 1:Nwindows
     m(w) = b/(1-a) ;
     tau(w) = 1/(k(w)*dt) ;
     xi = (y -(b+a*x));
-    sigma2(w) = var(xi)/dt ;
-    sigma2_eq(w) = var(xi)/(1-a^2);
-    score(w) = (X(end)- m(w))/sqrt(sigma2_eq(w));
+    sigma(w) = sqrt(var(xi)/dt) ;
+    sigma_eq(w) = sqrt(var(xi)/(1-a^2));
+    score(w) = (X(end)- m(w))/sigma_eq(w);
     
     %Estrategia
     if ( (openShort(w) < 0.5)  && (openLong(w) < 0.5 ))

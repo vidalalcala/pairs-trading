@@ -16,8 +16,8 @@ dt = 1/252 ;
 Nwindows = N - windowSize ;
 
 %Parametros de la estrategia
-stdOpen = 0.6
-stdClose = 0.2
+stdOpen = 2.0
+stdClose = 1.0
 
 %Variables de la estrategia
 openShort(1) = 0 ;
@@ -59,8 +59,7 @@ for w = 1:Nwindows
     tau(w) = 1/(k*dt) ;
     xi = y - (b + m*x) ;
     sigma = sqrt(var(xi)/dt) ;
-    sigma_eq(w) = sigma*sigma/(1-m^2) ;
-    desv = sigma_eq(w)*sqrt(dt) ;
+    sigma_eq(w) = sqrt(var(xi)/(1-m^2)) ;
     score(w) = (W(end)-n(w))/sigma_eq(w) ;
     
     %Implementar estrategia
