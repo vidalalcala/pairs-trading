@@ -1,5 +1,6 @@
-% PairsTrading11.m
-% Estimar parametros de una estrategia simple
+% PairsTest11.m
+% Evaluar PL con los datos del
+% test
 
 % clear
 clear all
@@ -9,16 +10,20 @@ clc
 %Load data
 Stotal = load('Pairs_HistPrices.csv') ;
 [N,z] = size(Stotal)
+Stest = Stotal( floor(N/2) + 2 : end,:);
+[N,z] = size(Stest)
+
+
 
 %Definir ventanas
-windowSize = 60 ; %numero de precios
+windowSize = 30 ; %numero de precios
 dt = 1/252 ;
 Nwindows = N - windowSize ;
 
 %Parametros de la estrategia
-stdOpen = 2.0
+stdOpen = 1.7
 stdClose = 0.5
-maxDays = 6
+maxDays = 5
 
 %Variables de la estrategia
 openShort(1) = 0 ;
@@ -31,7 +36,7 @@ for w = 1:Nwindows
     % Estimar score y tau 
     
     %Precios de la ventana
-    S = Stotal( w : w + windowSize - 1 , :) ;
+    S = Stest( w : w + windowSize - 1 , :) ;
     
     %Calcular rendimientos
     R = ( S(2:end,:)-S(1:(end-1),:) )./S(1:(end-1),:);
@@ -128,7 +133,7 @@ plot(1:Nwindows,-stdClose,'red')
 %title('openBeta')
 
 % Calcular P&L
-Swindows = Stotal( windowSize : end - 1, : ) ; %Precios al terminar la ventana
+Swindows = Stest( windowSize : end - 1, : ) ; %Precios al terminar la ventana
 
 % MMA es la Money Market Account
 MMA = (openShort(2:end)-openShort(1:end-1)).*(Swindows(:,1)'- openBeta(1:end-1).*Swindows(:,2)') ;
@@ -148,4 +153,3 @@ PL = MMA + equity;
 subplot(2,1,2)
 plot(PL)
 title('Portfolio PL')
-
