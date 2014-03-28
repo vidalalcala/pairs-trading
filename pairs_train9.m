@@ -1,5 +1,6 @@
-% pairs_trading9.m
-% Implementacion de la estrategia "Pairs trading" en Matlab
+% pairs_train9.m
+% Implementacion del entrenamiento de
+% "Pairs trading" en Matlab
 % para la clase CDF , 9-11 am .
 
 % clear
@@ -10,12 +11,14 @@ clc
 %Load data
 Sfull = load('Pairs_HistPrices.csv') ;
 [N,z] = size(Sfull)
+Strain = Sfull(1:floor(N/2),:);
+[N,z] = size(Strain)
 
 %Parametros
-windowSize = 59 ;%numero de rendimientos
+windowSize = 30 ;%numero de rendimientos
 dt = 1/252 ;
-stdOpen = 2.0 ;
-stdClose = 0.5 ;
+stdOpen = 1.40 ;
+stdClose = 1.05 ;
 maxDays = 8 ;
 
 %Numero de ventanas
@@ -27,7 +30,7 @@ openLong(1) = 0 ;
 betaOpen = zeros( 1 , Nwindows+1); % Beta del portafolio abierto
 
 for w = 1:Nwindows
-    S = Sfull(w : w + windowSize , : ) ;
+    S = Strain(w : w + windowSize , : ) ;
     R = (S(2:end,:)-S(1:end-1,:))./S(1:end-1,:);
     
     %Correr regresion lineal de rendimientos
@@ -102,7 +105,7 @@ plot(1:Nwindows , stdClose , 'r')
 plot(1:Nwindows , -stdClose , 'r')
 
 % Calcular P&L
-Swindows = Sfull( windowSize + 1  : end - 1, : ) ; %Precios al terminar la ventana
+Swindows = Strain( windowSize + 1  : end - 1, : ) ; %Precios al terminar la ventana
 
 % MMA es la Money Market Account
 MMA = (openShort(2:end)-openShort(1:end-1)).*(Swindows(:,1)'- betaOpen(1:end-1).*Swindows(:,2)') ;
@@ -122,6 +125,7 @@ PL = MMA + equity;
 subplot(2,1,2)
 plot(PL)
 title('Portfolio PL')
+ylabel('dollars')
 
 
 
