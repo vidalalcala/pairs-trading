@@ -31,11 +31,8 @@ for w = 1:Nwindows
     
     %Correr regresion lineal de rendimientos
     x = R(1:windowSize,2) ;
-    W = [ones(size(x)) x];
     y = R(1:windowSize,1) ;
-    [Coefficients,bint] = regress(y,W);
-    b = Coefficients(1);
-    m = Coefficients(2);
+    [P,m,b] = regression( x' ,y') ;
     error = y-(b + m*x);
     beta(w) = m ;
     
@@ -45,10 +42,7 @@ for w = 1:Nwindows
     %Calcular score
     x = X(1:end-1) ;
     y = X(2:end);
-    W = [ones(size(x)) x];
-    [Coefficients,bint] = regress(y,W);
-    a = Coefficients(2) ;
-    b = Coefficients(1) ;
+    [P,a,b] = regression( x' ,y') ;
     
     k(w) = (1-a)/dt ; 
     m(w) = b/(1-a) ;
